@@ -19,7 +19,6 @@ longitudes = range(-39, -33)
 latitudes = range(140, 151)
 
 countTotal = 0
-rowcount = 0
 prices = []
 
 start = timeit.timeit()
@@ -47,25 +46,27 @@ for longitude in longitudes:
 
                 prices.append((date, price['amount'], stationID, station, price['type']))
 
-                countThisLongLat += 1
                 countTotal += 1
-
-        print(countThisLongLat)
-print(countTotal)
 
 try:
     dbcursor.executemany(entry_query, prices)
-    rowcount += dbcursor.rowcount
+    totalthisrun = dbcursor.rowcount
 except Error as e:
     print(e)
 
 end = timeit.timeit()
 
-print(rowcount)
+print(totalthisrun)
 
-duration = end - start
+duration = int(end - start)
 
-dbcursor.execute(meta_query, (duration, countTotal, 0, 0))
+dbcursor.execute("SELECT total_post_run FROM run_meta ORDER BY id DESC LIMIT 1")
 
-# mydb.commit()
+total_pre_run = dbcursor.fetchone()[0]
+
+total_post_run = total_pre_run + totalthisrun
+
+dbcursor.execute(meta_query, (duration, countTotal, totalthisrun, total_post_run))
+
+mydb.commit()
 mydb.close()
