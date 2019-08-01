@@ -8,8 +8,6 @@ import database.database
 
 mydb = database.database.mydb
 
-print(mydb)
-
 dbcursor = mydb.cursor()
 
 entry_query = "INSERT IGNORE INTO fuel_auto (date, price, station_id, station, type) VALUES (%s,%s,%s,%s,%s);"
