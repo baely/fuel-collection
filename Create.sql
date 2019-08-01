@@ -18,6 +18,7 @@ AS SELECT
    year(`fuel_auto`.`date`) AS `y`,month(`fuel_auto`.`date`) AS `m`,dayofmonth(`fuel_auto`.`date`) AS `d`,hour(`fuel_auto`.`date`) AS `h`,avg(`fuel_auto`.`price`) AS `a`,count(`fuel_auto`.`price`) AS `c`
 FROM `fuel_auto` group by year(`fuel_auto`.`date`),month(`fuel_auto`.`date`),dayofmonth(`fuel_auto`.`date`),hour(`fuel_auto`.`date`);
 
+-- CREATE TABLE `prices_hour` ();
 
 DROP TABLE IF EXISTS `hour_freq`;
 
@@ -26,6 +27,7 @@ AS SELECT
    ((hour(`fuel_auto`.`date`) + 10) % 24) AS `h`,count(`fuel_auto`.`date`) AS `c`
 FROM `fuel_auto` group by ((hour(`fuel_auto`.`date`) + 10) % 24) order by ((hour(`fuel_auto`.`date`) + 10) % 24);
 
+-- CREATE TABLE `hour-freq` ();
 
 DROP TABLE IF EXISTS `prices`;
 
@@ -34,6 +36,7 @@ AS SELECT
    year(`fuel_auto`.`date`) AS `y`,month(`fuel_auto`.`date`) AS `m`,dayofmonth(`fuel_auto`.`date`) AS `d`,avg(`fuel_auto`.`price`) AS `a`,count(0) AS `n`
 FROM `fuel_auto` group by year(`fuel_auto`.`date`),month(`fuel_auto`.`date`),dayofmonth(`fuel_auto`.`date`);
 
+-- CREATE TABLE `prices` ();
 
 DROP TABLE IF EXISTS `run_meta`;
 
