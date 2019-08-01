@@ -1,23 +1,28 @@
 import datetime
 import json
 import requests
+import timeit
 import mysql.connector
 from mysql.connector import MySQLConnection, Error
-import database.DataBase
+import database.database
 
-mydb = database.DataBase.mydb
+mydb = database.database.mydb
 
 print(mydb)
 
 dbcursor = mydb.cursor()
 
-query = "INSERT INTO fuel_auto (date, price, station_id, station, type) VALUES (%s,%s,%s,%s,%s);"
+entry_query = "INSERT IGNORE INTO fuel_auto (date, price, station_id, station, type) VALUES (%s,%s,%s,%s,%s);"
+meta_query = "INSERT INTO run_meta (duration, found, inserted, total_post_run) VALUES (%s,%s,%s,%s);"
 
 longitudes = range(-39, -33)
 latitudes = range(140, 151)
 
 countTotal = 0
+rowcount = 0
+prices = []
 
+start = timeit.timeit()
 for longitude in longitudes:
     for latitude in latitudes:
         north = longitude
@@ -26,7 +31,6 @@ for longitude in longitudes:
         west = latitude + 1
 
         countThisLongLat = 0
-        prices = []
 
         url = "https://petrolspy.com.au/webservice-1/station/box?neLat={}&neLng={}&swLat={}&swLng={}".format(north, east, south, west)
 
@@ -45,14 +49,23 @@ for longitude in longitudes:
 
                 countThisLongLat += 1
                 countTotal += 1
-        
-        print(prices)
-        try:
-            dbcursor.executemany(query, prices)
-        except Error as e:
-            pass
 
         print(countThisLongLat)
 print(countTotal)
 
-mydb.commit()
+try:
+    dbcursor.executemany(entry_query, prices)
+    rowcount += dbcursor.rowcount
+except Error as e:
+    print(e)
+
+end = timeit.timeit()
+
+print(rowcount)
+
+duration = end - start
+
+dbcursor.execute(meta_query, (duration, countTotal, 0, 0))
+
+# mydb.commit()
+mydb.close()
