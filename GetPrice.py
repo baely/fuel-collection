@@ -1,7 +1,7 @@
 import datetime
 import json
 import requests
-import timeit
+import time
 import mysql.connector
 from mysql.connector import MySQLConnection, Error
 import database.database
@@ -19,7 +19,7 @@ latitudes = range(140, 151)
 countTotal = 0
 prices = []
 
-start = timeit.timeit()
+start = time.time()
 for longitude in longitudes:
     for latitude in latitudes:
         north = longitude
@@ -52,9 +52,7 @@ try:
 except Error as e:
     print(e)
 
-end = timeit.timeit()
-
-print(totalthisrun)
+end = time.time()
 
 duration = int(end - start)
 

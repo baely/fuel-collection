@@ -45,4 +45,6 @@ CREATE TABLE `run_meta` (
   `inserted` int NOT NULL,
   `total_post_run` int NOT NULL,
   PRIMARY KEY (`id`)
-)
+);
+
+INSERT INTO `run_meta` (`duration`, `found`, `inserted`, `total_post_run`) VALUES (0, 0, 0, (SELECT COUNT(*) FROM fuel_auto));
