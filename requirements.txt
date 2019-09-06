@@ -1,5 +1,2 @@
-datetime
-json
 requests
-time
 mysql.connector
