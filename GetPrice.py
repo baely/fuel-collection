@@ -1,14 +1,9 @@
 import datetime
 import json
 import requests
-# import mysql.connector
-# from mysql.connector import MySQLConnection, Error
 import psycopg2
 from psycopg2 import connect
 from psycopg2 import errors
-# import database.DataBase
-
-# mydb = database.DataBase.mydb
 
 mydb = psycopg2.connect('dbname=fuel')
 
@@ -48,15 +43,11 @@ for longitude in longitudes:
 
                 countThisLongLat += 1
                 countTotal += 1
-        
-        # print(prices)
+
         try:
             dbcursor.executemany(query, prices)
         except Exception as e:
             print(e)
-
-        # print(countThisLongLat)
-# print(countTotal)
 
 f = open("last.txt", "w")
 f.write(str(datetime.datetime.now()))
