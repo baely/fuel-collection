@@ -1,17 +1,20 @@
 import datetime
 import json
 import requests
-import mysql.connector
-from mysql.connector import MySQLConnection, Error
-import database.DataBase
+# import mysql.connector
+# from mysql.connector import MySQLConnection, Error
+import psycopg2
+from psycopg2 import connect
+from psycopg2 import errors
+# import database.DataBase
 
-mydb = database.DataBase.mydb
+# mydb = database.DataBase.mydb
 
-print(mydb)
+mydb = psycopg2.connect('dbname=fuel')
 
 dbcursor = mydb.cursor()
 
-query = "INSERT INTO fuel_auto (date, price, station_id, station, type) VALUES (%s,%s,%s,%s,%s);"
+query = "INSERT INTO fuel_auto (date, price, station_id, station, type) VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING;"
 
 longitudes = range(-39, -33)
 latitudes = range(140, 151)
@@ -46,13 +49,17 @@ for longitude in longitudes:
                 countThisLongLat += 1
                 countTotal += 1
         
-        print(prices)
+        # print(prices)
         try:
             dbcursor.executemany(query, prices)
-        except Error as e:
-            pass
+        except Exception as e:
+            print(e)
 
-        print(countThisLongLat)
-print(countTotal)
+        # print(countThisLongLat)
+# print(countTotal)
+
+f = open("last.txt", "w")
+f.write(str(datetime.datetime.now()))
+f.close()
 
 mydb.commit()
